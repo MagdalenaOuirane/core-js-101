@@ -93,10 +93,9 @@ function getFirstChar(value) {
  *   'cat'              => 'cat'
  *   '\tHello, World! ' => 'Hello, World!'
  */
-function removeLeadingAndTrailingWhitespaces(/* value */) {
-  throw new Error('Not implemented');
+function removeLeadingAndTrailingWhitespaces(value) {
+  return value.trim();
 }
-
 /**
  * Returns a string that repeated the specified number of times.
  *
@@ -108,8 +107,12 @@ function removeLeadingAndTrailingWhitespaces(/* value */) {
  *   'A', 5  => 'AAAAA'
  *   'cat', 3 => 'catcatcat'
  */
-function repeatString(/* value, count */) {
-  throw new Error('Not implemented');
+function repeatString(value, count) {
+  if (count > 0) {
+    return value.repeat(count);
+  }
+
+  return '';
 }
 
 /**
@@ -124,8 +127,12 @@ function repeatString(/* value, count */) {
  *   'I like legends', 'end' => 'I like legs',
  *   'ABABAB','BA' => 'ABAB'
  */
-function removeFirstOccurrences(/* str, value */) {
-  throw new Error('Not implemented');
+function removeFirstOccurrences(str, value) {
+  const index = str.indexOf(value);
+  if (index === -1) {
+    return str;
+  }
+  return str.slice(0, index) + str.slice(index + value.length);
 }
 
 /**
@@ -139,8 +146,8 @@ function removeFirstOccurrences(/* str, value */) {
  *   '<span>' => 'span'
  *   '<a>' => 'a'
  */
-function unbracketTag(/* str */) {
-  throw new Error('Not implemented');
+function unbracketTag(str) {
+  return str.slice(1, -1);
 }
 
 /**
@@ -153,8 +160,8 @@ function unbracketTag(/* str */) {
  *   'Thunderstruck' => 'THUNDERSTRUCK'
  *  'abcdefghijklmnopqrstuvwxyz' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
  */
-function convertToUpperCase(/* str */) {
-  throw new Error('Not implemented');
+function convertToUpperCase(str) {
+  return str.toUpperCase();
 }
 
 /**
@@ -172,8 +179,8 @@ function convertToUpperCase(/* str */) {
  *   ],
  *   'info@gmail.com' => ['info@gmail.com']
  */
-function extractEmails(/* str */) {
-  throw new Error('Not implemented');
+function extractEmails(str) {
+  return str.split(';');
 }
 
 /**
@@ -199,8 +206,14 @@ function extractEmails(/* str */) {
  *             '└──────────┘\n'
  *
  */
-function getRectangleString(/* width, height */) {
-  throw new Error('Not implemented');
+function getRectangleString(width, height) {
+  const TOP_LINE = '┌ ┐\n';
+  const BOTTOM_LINE = '└ ┘\n';
+  const SIDE_LINE = '│ │\n';
+  if (width < 2 || height < 2) return '';
+  return TOP_LINE.replace(' ', '─'.repeat(width - 2))
+  + SIDE_LINE.replace(' ', ' '.repeat(width - 2)).repeat(height - 2)
+  + BOTTOM_LINE.replace(' ', '─'.repeat(width - 2));
 }
 
 /**
@@ -219,8 +232,17 @@ function getRectangleString(/* width, height */) {
  *    => 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm'
  *
  */
-function encodeToRot13(/* str */) {
-  throw new Error('Not implemented');
+function encodeToRot13(str) {
+  const encode = (charCode) => {
+    if ((charCode >= 65 && charCode <= 77) || (charCode >= 97 && charCode <= 109)) {
+      return String.fromCharCode(charCode + 13);
+    }
+    if ((charCode >= 78 && charCode <= 90) || (charCode >= 110 && charCode <= 122)) {
+      return String.fromCharCode(charCode - 13);
+    }
+    return String.fromCharCode(charCode);
+  };
+  return str.split('').map((char) => encode(char.charCodeAt(0))).join('');
 }
 
 /**
@@ -236,9 +258,10 @@ function encodeToRot13(/* str */) {
  *   isString('test') => true
  *   isString(new String('test')) => true
  */
-function isString(/* value */) {
-  throw new Error('Not implemented');
+function isString(value) {
+  return value != null && (typeof value.valueOf() === 'string');
 }
+
 
 /**
  * Returns playid card id.
@@ -264,8 +287,12 @@ function isString(/* value */) {
  *   'Q♠' => 50
  *   'K♠' => 51
  */
-function getCardId(/* value */) {
-  throw new Error('Not implemented');
+function getCardId(value) {
+  const SUITS = ['♣', '♦', '♥', '♠'];
+  const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+  const suit = value.slice(-1);
+  const rank = value.slice(0, -1);
+  return (SUITS.indexOf(suit)) * RANKS.length + RANKS.indexOf(rank);
 }
 
 module.exports = {
